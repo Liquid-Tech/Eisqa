@@ -17,6 +17,7 @@ import { SkillModule } from './skill/skill.module';
 import { EducationModule } from './education/education.module';
 import { CertificationModule } from './certification/certification.module';
 import { SubCategoryModule } from './sub-category/sub-category.module';
+import { GigOfferModule } from './gig-offer/gig-offer.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { SubCategoryModule } from './sub-category/sub-category.module';
     EducationModule,
     CertificationModule,
     SubCategoryModule,
+    GigOfferModule,
   ],
   controllers: [AppController],
   providers: [AppService],
