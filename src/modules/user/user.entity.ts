@@ -1,39 +1,59 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Role } from '../role/role.entity';
+import { RegisterPayload } from '../../modules/auth';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({
+  name: 'admins',
+})
 export class User {
-    @PrimaryGeneratedColumn()
-    id:number
+  @PrimaryGeneratedColumn('uuid')
+  uuid: string;
 
-    @Column()
-    email:string
+  @Column({ length: 255 })
+  userName: string;
 
-    @Column()
-    password:string
+  @Column({ length: 255 })
+  fullName: string;
 
-    @Column()
-    name:string
+  @Column({ length: 255 })
+  email: string;
 
-    @Column()
-    description:string
+  @Column({ length: 255 })
+  country: string;
 
-    @Column()
-    gender:string
+  @Column({ length: 255 })
+  phoneNumber: string;
 
-    @Column()
-    platform:string
+  @Column({
+    name: `password`,
+    length: 255,
+  })
+  password: string;
 
-    @Column()
-    country:string
+  toJSON() {
+    const { password, ...self } = this;
+    return self;
+  }
 
-    @Column()
-    joiningDate:Date
+  toDto() {
+    const { password, ...dto } = this;
+    return dto;
+  }
 
-    @Column()
-    status:string
-    
-    @OneToOne(()=> Role)
-    @JoinColumn()
-    role: Role
+  fromDto(payload: RegisterPayload): User {
+    this.userName = payload.userName;
+    this.fullName = payload.fullName;
+    this.email = payload.email;
+    this.country = payload.country;
+    this.phoneNumber = payload.phoneNumber;
+    this.password = payload.password;
+
+    return this;
+  }
+}
+
+export class UserFillableFields {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
 }
