@@ -3,21 +3,21 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserModule } from './user/user.module';
-import { GigModule } from './gig/gig.module';
-import { RoleModule } from './role/role.module';
-import { CategoryModule } from './category/category.module';
-import { OrderModule } from './order/order.module';
-import { LevelModule } from './level/level.module';
-import { NotificationModule } from './notification/notification.module';
-import { MessageModule } from './message/message.module';
-import { BadgeModule } from './badge/badge.module';
-import { FeedbackModule } from './feedback/feedback.module';
-import { SkillModule } from './skill/skill.module';
-import { EducationModule } from './education/education.module';
-import { CertificationModule } from './certification/certification.module';
-import { SubCategoryModule } from './sub-category/sub-category.module';
-import { GigOfferModule } from './gig-offer/gig-offer.module';
+import { UserModule } from './modules/user/user.module';
+import { GigModule } from './modules/gig/gig.module';
+import { RoleModule } from './modules/role/role.module';
+import { CategoryModule } from './modules/category/category.module';
+import { OrderModule } from './modules/order/order.module';
+import { LevelModule } from './modules/level/level.module';
+import { NotificationModule } from './modules/notification/notification.module';
+import { MessageModule } from './modules/message/message.module';
+import { BadgeModule } from './modules/badge/badge.module';
+import { FeedbackModule } from './modules/feedback/feedback.module';
+import { SkillModule } from './modules/skill/skill.module';
+import { EducationModule } from './modules/education/education.module';
+import { CertificationModule } from './modules/certification/certification.module';
+import { SubCategoryModule } from './modules/sub-category/sub-category.module';
+import { GigOfferModule } from './modules/gig-offer/gig-offer.module';
 
 @Module({
   imports: [
@@ -61,4 +61,4 @@ import { GigOfferModule } from './gig-offer/gig-offer.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
