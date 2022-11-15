@@ -1,1 +1,1 @@
-export class CreateSubCategoryDto {}
+export class CreateSubCategoryDto { }

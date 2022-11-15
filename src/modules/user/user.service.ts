@@ -10,13 +10,16 @@ import { Repository } from 'typeorm';
 import { ResponseCode, ResponseMessage } from '../../utils/enum';
 
 import { User, UserFillableFields } from './user.entity';
+import { CreateUserDto } from './common/user.dto';
+import { UserTypes } from './common/user.enum';
 
 @Injectable()
 export class UsersService {
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async get(uuid: string) {
     return this.userRepository.findOne({ uuid });
@@ -26,24 +29,21 @@ export class UsersService {
     return await this.userRepository.findOne({ email });
   }
 
-  async create(payload: UserFillableFields) {
+  async create(payload: CreateUserDto) {
     const user = await this.getByEmail(payload.email);
 
     if (user) {
-      throw new NotAcceptableException(
-        `User with provided email already created.`,
-      );
+      throw new HttpException(ResponseMessage.USER_ALREADY_EXISTS, ResponseCode.ALREADY_EXIST);
     }
-
     return await this.userRepository.save(payload);
   }
 
   /**
-   * Create a genesis user
+   * Create a user
    * @param payload
    * @returns
    */
-  async createAdmin(payload: RegisterPayload): Promise<User> {
+  async createUser(payload: RegisterPayload): Promise<User> {
     const user = await this.getByEmail(payload.email);
     if (user) {
       throw new HttpException(
@@ -52,7 +52,8 @@ export class UsersService {
       );
     }
     const newUser = new User().fromDto(payload);
-    newUser.password = await Hash.make(newUser.password);
+    newUser.password = await Hash.make(payload.password);
+    newUser.type = UserTypes.FREELANCER;
     return await this.userRepository.save(newUser);
   }
 

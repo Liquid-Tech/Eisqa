@@ -4,8 +4,9 @@ import { ResponseCode, ResponseMessage } from '../../utils/enum';
 import { MailService } from '../../utils/mailer/mail.service';
 import { RegisterPayload } from '.';
 import { Hash } from '../../utils/Hash';
-import { User, UsersService } from './../user';
-import { LoginPayload } from './login.payload';
+import { UsersService } from '../user/user.service';
+import { User } from '../user/user.entity';
+import { LoginPayload } from './common/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -34,22 +35,13 @@ export class AuthService {
   }
 
   /**
-   * Register a genesis user
+   * Register a user and returns the token
    * @param payload
    * @returns
    */
-  public async registerAdmin(payload: RegisterPayload): Promise<User> {
-    return new Promise<User>(async (resolve, reject) => {
-      await this.userService
-        .createAdmin(payload)
-        .then(async (user: User) => {
-          await this.createToken(user);
-          return resolve(user);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+  public async registerUser(payload: RegisterPayload) {
+    const user = await this.userService.createUser(payload);
+    return await this.createToken(user);
   }
 
   async validateUser(payload: LoginPayload): Promise<any> {

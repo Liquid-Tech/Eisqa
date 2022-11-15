@@ -8,9 +8,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService, LoginPayload, RegisterPayload } from './';
+import { AuthService, LoginPayload } from './';
+import { RegisterPayload } from './common/auth.dto'
 import { CurrentUser } from './../common/decorator/current-user.decorator';
-import { User } from './../user';
+import { User } from '../user/user.entity';
 import { LoggerService } from '../../utils/logger/logger.service';
 import {
   LoggerMessages,
@@ -18,7 +19,7 @@ import {
   ResponseMessage,
 } from '../../utils/enum';
 import { Request, Response } from 'express';
-import { EmailDto, ForgotPasswordDto } from './register.payload';
+import { EmailDto, ForgotPasswordDto } from './common/auth.dto';
 
 @Controller('api/auth')
 export class AuthController {
@@ -30,23 +31,29 @@ export class AuthController {
   }
 
   @Post('register')
-  async createAdmin(
+  async createUser(
     @Body() payload: RegisterPayload,
     @Res() res: Response,
   ): Promise<Response> {
-    const user = await this.authService.registerAdmin(payload);
+    const data = await this.authService.registerUser(payload);
     return res.status(ResponseCode.CREATED_SUCCESSFULLY).send({
       statusCode: ResponseCode.CREATED_SUCCESSFULLY,
-      data: user.toDto(),
+      data,
       message: ResponseMessage.CREATED_SUCCESSFULLY,
     });
   }
 
   @Post('login')
-  async login(@Body() payload: LoginPayload): Promise<any> {
-    this.loggerService.log(`POST auth/login ${LoggerMessages.API_CALLED}`);
+  async login(
+    @Body() payload: LoginPayload,
+    @Res() res: Response): Promise<any> {
     const user = await this.authService.validateUser(payload);
-    return await this.authService.createToken(user);
+    const token = await this.authService.createToken(user);
+    return res.status(ResponseCode.SUCCESS).send({
+      statusCode: ResponseCode.SUCCESS,
+      message: ResponseMessage.SUCCESS,
+      data: token
+    })
   }
 
   @Post('forgot_password')

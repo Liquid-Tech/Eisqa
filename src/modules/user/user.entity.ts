@@ -1,24 +1,18 @@
 import { RegisterPayload } from '../../modules/auth';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-
-@Entity({
-  name: 'admins',
-})
-export class User {
-  @PrimaryGeneratedColumn('uuid')
+import { BaseEntity } from '../common/entity/base.entity';
+import { Hash } from '../../utils/Hash';
+import { UserStatus } from './common/user.enum';
+@Entity()
+export class User extends BaseEntity {
+  @PrimaryGeneratedColumn()
   uuid: string;
-
-  @Column({ length: 255 })
-  userName: string;
 
   @Column({ length: 255 })
   fullName: string;
 
   @Column({ length: 255 })
   email: string;
-
-  @Column({ length: 255 })
-  country: string;
 
   @Column({ length: 255 })
   phoneNumber: string;
@@ -28,6 +22,12 @@ export class User {
     length: 255,
   })
   password: string;
+
+  @Column()
+  type: string
+
+  @Column({ default: UserStatus.ACTIVE })
+  status: string
 
   toJSON() {
     const { password, ...self } = this;
@@ -40,12 +40,9 @@ export class User {
   }
 
   fromDto(payload: RegisterPayload): User {
-    this.userName = payload.userName;
-    this.fullName = payload.fullName;
+    this.fullName = `${payload.firstName} ${payload.lastName}`;
     this.email = payload.email;
-    this.country = payload.country;
     this.phoneNumber = payload.phoneNumber;
-    this.password = payload.password;
 
     return this;
   }
