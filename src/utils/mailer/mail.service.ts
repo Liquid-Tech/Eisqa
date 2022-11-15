@@ -5,7 +5,7 @@ import { ResponseCode, ResponseMessage } from '../../utils/enum';
 
 @Injectable()
 export class MailService {
-  constructor(private mailerService: MailerService) {}
+  constructor(private mailerService: MailerService) { }
 
   /**
    * Send Account Confirmation Email To User On Signup
